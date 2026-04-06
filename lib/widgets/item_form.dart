@@ -3,10 +3,9 @@ import '../models/item.dart';
 import '../services/firestore_service.dart';
 
 class ItemForm extends StatefulWidget {
-  final Item? item;
   final FirestoreService service;
-
-  const ItemForm({super.key, this.item, required this.service});
+  final Item? item;
+  const ItemForm({super.key, required this.service, this.item});
 
   @override
   State<ItemForm> createState() => _ItemFormState();
@@ -14,18 +13,22 @@ class ItemForm extends StatefulWidget {
 
 class _ItemFormState extends State<ItemForm> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _quantityController = TextEditingController();
-  final _priceController = TextEditingController();
+  late TextEditingController _nameController;
+  late TextEditingController _quantityController;
+  late TextEditingController _priceController;
 
   @override
   void initState() {
     super.initState();
-    if (widget.item != null) {
-      _nameController.text = widget.item!.name;
-      _quantityController.text = widget.item!.quantity.toString();
-      _priceController.text = widget.item!.price.toString();
-    }
+    _nameController = TextEditingController(
+      text: widget.item != null ? widget.item!.name : '',
+    );
+    _quantityController = TextEditingController(
+      text: widget.item != null ? widget.item!.quantity.toString() : '',
+    );
+    _priceController = TextEditingController(
+      text: widget.item != null ? widget.item!.price.toString() : '',
+    );
   }
 
   @override
@@ -36,26 +39,31 @@ class _ItemFormState extends State<ItemForm> {
     super.dispose();
   }
 
-  void _submit() async {
-    if (_formKey.currentState!.validate()) {
-      final name = _nameController.text;
-      final quantity = int.parse(_quantityController.text);
-      final price = double.parse(_priceController.text);
+  void _submitForm() async {
+    if (!_formKey.currentState!.validate()) return;
 
-      final newItem = Item(
-        id: widget.item?.id ?? '',
-        name: name,
-        quantity: quantity,
-        price: price,
-      );
+    final name = _nameController.text.trim();
+    final quantity = int.parse(_quantityController.text.trim());
+    final price = double.parse(_priceController.text.trim());
 
+    final item = Item(
+      id: widget.item?.id ?? '',
+      name: name,
+      quantity: quantity,
+      price: price,
+    );
+
+    try {
       if (widget.item == null) {
-        await widget.service.addItem(newItem);
+        await widget.service.addItem(item);
       } else {
-        await widget.service.updateItem(newItem);
+        await widget.service.updateItem(item);
       }
-
-      Navigator.of(context).pop();
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
 
@@ -76,21 +84,21 @@ class _ItemFormState extends State<ItemForm> {
             ),
             TextFormField(
               controller: _quantityController,
-              decoration: const InputDecoration(labelText: 'Quantity'),
               keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Quantity'),
               validator: (value) {
                 if (value == null || value.isEmpty) return 'Enter quantity';
-                if (int.tryParse(value) == null) return 'Has to be a number';
+                if (int.tryParse(value) == null) return 'Enter valid number';
                 return null;
               },
             ),
             TextFormField(
               controller: _priceController,
-              decoration: const InputDecoration(labelText: 'Price'),
               keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Price'),
               validator: (value) {
                 if (value == null || value.isEmpty) return 'Enter price';
-                if (double.tryParse(value) == null) return 'Has to be a number';
+                if (double.tryParse(value) == null) return 'Enter valid price';
                 return null;
               },
             ),
@@ -99,10 +107,10 @@ class _ItemFormState extends State<ItemForm> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pop(context),
           child: const Text('Cancel'),
         ),
-        ElevatedButton(onPressed: _submit, child: const Text('Save')),
+        ElevatedButton(onPressed: _submitForm, child: const Text('Save')),
       ],
     );
   }

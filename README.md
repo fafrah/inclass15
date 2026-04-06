@@ -1,17 +1,8 @@
 # inventory_manage_app
+This app manages inventory items. It updates in real-time using Firebase. The user can create, read, update and delete the items. 
 
-A new Flutter project.
+# The first feature - total inventory value
+This feature displays the sum of inventory values. It will update each time the user deletes, adds, or edits the item value. 
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# The second feature - Search bar
+This feature is a search bar that filters the items by name. It also updates immediately. It makes it easier for the user to search for a specific item.
