@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'models/item.dart';
 import 'services/firestore_service.dart';
+import 'widgets/item_form.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,13 +39,37 @@ class MyApp extends StatelessWidget {
                 subtitle: Text(
                   "Qty: ${items[i].quantity} | \$${items[i].price.toStringAsFixed(2)}",
                 ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => service.deleteItem(items[i].id),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) =>
+                              ItemForm(item: items[i], service: service),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => service.deleteItem(items[i].id),
+                    ),
+                  ],
                 ),
               ),
             );
           },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (_) => ItemForm(service: service),
+            );
+          },
+          child: const Icon(Icons.add),
         ),
       ),
     );
