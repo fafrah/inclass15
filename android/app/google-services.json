@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "941309510734",
+    "project_id": "inventory-manage-app",
+    "storage_bucket": "inventory-manage-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941309510734:android:9b2247dc845733dd8a6f1f",
+        "android_client_info": {
+          "package_name": "com.example.inventory_manage_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp5v_sxfA9e4wYKCYYPIw-c0rAT5FE1VY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
